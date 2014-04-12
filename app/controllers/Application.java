@@ -25,7 +25,21 @@ public class Application extends Controller {
         if (journeeCourante == null) {
         	journeeCourante = "1";
         }
-		return ok( views.html.index.render( Joueur.all(), ScoreOfficiel.getAll(), ScoreVincent.getAll(), PronoJournee.journeeNumero(journeeCourante), JourneeTop14.derniereJouee(), JourneeTop14.prochaineJouee(), journeeCourante ) );
+		return ok( views.html.index.render( Joueur.all(), ScoreOfficiel.getAll(), ScoreVincent.getAll(), PronoJournee.journeeNumero(journeeCourante), JourneeTop14.derniereJouee(), JourneeTop14.prochaineJouee(), journeeCourante, Commentaire.all() ) );
+	}
+
+
+	public static Result ajoutCommentaire() {
+		DynamicForm requestData = form().bindFromRequest();
+        String pseudo = requestData.get("pseudo");
+        String texte = requestData.get("texte");
+        if (pseudo != "" && texte != "") {
+	        Commentaire c = new Commentaire();
+	        c.pseudo = pseudo;
+	        c.texte = texte;
+	        c.save();
+        }
+		return pronos();
 	}
 
 

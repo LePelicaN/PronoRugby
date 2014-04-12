@@ -1,4 +1,4 @@
-@(joueurs: List[Joueur], scoresOfficiel: List[Score], scoresVincent: List[Score], pronoJournees: List[PronoJournee], precedenteJournee: JourneeTop14, prochaineJournee: JourneeTop14, journeeCourante: String)
+@(joueurs: List[Joueur], scoresOfficiel: List[Score], scoresVincent: List[Score], pronoJournees: List[PronoJournee], precedenteJournee: JourneeTop14, prochaineJournee: JourneeTop14, journeeCourante: String, commentaires: List[Commentaire] )
 
 @import helper._
 
@@ -62,6 +62,23 @@
 	</table>
 }
 
+@displayCommentaires(commentaires: List[Commentaire]) = {
+	<h3>Chat</h3>
+	
+	@helper.form(action = routes.Application.ajoutCommentaire()) {
+		<input type="text" id="searchbox" name="pseudo" placeholder="Pseudo">
+		<input type="text" id="searchbox" name="texte" placeholder="Message">
+		<input type="submit" id="searchsubmit" value="Ajouter message" class="btn primary">
+	}
+	
+	<div id="commentaires">
+		@for(commentaire <- commentaires) {
+			@commentaire.pseudo : @commentaire.texte 
+			<br/>
+		}
+	</div>
+}
+
 @displayPronoMatch(pronoMatch: PronoMatch) = {
 		<tr>
 			<td class="@{ if (pronoMatch.victoireADomicile) "gagnant" else "perdant" }">@pronoMatch.matchPronostique.domicile</td>
@@ -115,6 +132,8 @@
 	@displayScores(scoresOfficiel, scoresVincent)
 	<br/>
 	@displayJournees(precedenteJournee, prochaineJournee)
+	<br/>
+	@displayCommentaires(commentaires)
 	<br/>
 	@displayResumePronoJournees(pronoJournees, journeeCourante)
 	<a class="btn success" id="add" href="@routes.Application.nouveauProno()">Ajouter ou éditer un prono</a>

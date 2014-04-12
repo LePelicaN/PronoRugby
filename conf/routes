@@ -17,6 +17,9 @@ POST	/pronos/sauvprono	        controllers.Application.sauvegardeProno()
 GET     /pronos/nouveaujournee      controllers.Application.nouveauJournee()
 POST	/pronos/sauvjournee	        controllers.Application.sauvegardeJournee()
 
+# Commentaires
+
+GET     /pronos/nouveaucommentaire controllers.Application.ajoutCommentaire()
 
 # Joueurs
 

@@ -1,0 +1,54 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+
+# Pronos
+GET		/pronos						controllers.Application.pronos()
+
+GET     /pronos/nouveaujoueur       controllers.Application.nouveauJoueur()
+POST	/pronos/sauvjoueur	        controllers.Application.sauvegardeJoueur()
+
+GET     /pronos/nouveauprono        controllers.Application.nouveauProno()
+POST	/pronos/sauvprono	        controllers.Application.sauvegardeProno()
+
+GET     /pronos/nouveaujournee      controllers.Application.nouveauJournee()
+POST	/pronos/sauvjournee	        controllers.Application.sauvegardeJournee()
+
+
+# Joueurs
+
+GET		/pronos/joueurs				controllers.Joueurs.blank()
+
+# Journees
+
+GET		/pronos/journees			controllers.Journees.blank()
+
+GET     /pronos/journees/:id        controllers.Journees.editer(id:Long)
+POST    /pronos/journees/:id        controllers.Journees.mettreAJour(id:Long)
+
+POST    /pronos/journees/:id/supprimer    controllers.Journees.supprimer(id:Long)
+
+
+# Prono
+
+GET		/pronos/pronos/general    controllers.Pronos.blank()
+
+GET		/pronos/pronos/nouveauOuEditer2    controllers.Pronos.nouveauOuEditer2()
+# GET		/pronos/pronos/nouveauOuEditer    controllers.Pronos.nouveauOuEditer(nomJoueur: String, numeroJournee: String)
+
+# GET		/pronos/pronos/nouveau    controllers.Pronos.nouveau()
+
+GET		/pronos/pronos/nouveau    						controllers.Pronos.nouveauChoixJoueurEtJournee()
+GET		/pronos/pronos/nouveauDetail/:joueurId/:journeeId   controllers.Pronos.nouveauDetail(joueurId:Long, journeeId:Long)
+
+GET     /pronos/pronos/:id        controllers.Pronos.editer(id:Long)
+POST    /pronos/pronos/:id        controllers.Pronos.mettreAJour(id:Long)
+
+POST    /pronos/pronos/:id/supprimer    controllers.Pronos.supprimer(id:Long)
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

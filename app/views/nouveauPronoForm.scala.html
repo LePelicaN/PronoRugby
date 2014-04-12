@@ -1,0 +1,69 @@
+@(pronoForm: Form[PronoJournee])
+
+@import helper._
+
+
+@pronoGroup(field: Field, className: String = "Boolean") = {
+    <div class="prono">
+		@checkbox(
+        	field, 
+            '_label -> None,
+			'_text -> "Victoire à domicile",
+            '_showConstraints -> false
+         )
+    </div>
+}
+
+@main("Nouveau prono") {
+    
+    <h1>Nouveau prono</h1>
+	@helper.form(action = routes.Pronos.nouveauOuEditer2()) {
+            @** @select(
+                pronoForm("numeroJournee"), 
+                options(JourneeTop14.listeNumero), 
+                '_label -> "Journée",
+                '_showConstraints -> false
+            )
+            @select(
+                pronoForm("nomJoueur"), 
+                options(Joueur.all().map( (x:Joueur) => x.nom):List[String]), 
+                '_label -> "Joueur", '_default -> "-- Choisissez un joueur --",
+                '_showConstraints -> false
+            ) **@
+		<input type="text" id="searchbox" name="nomJoueur" placeholder="Nom du joueur...">
+		<input type="text" id="searchbox" name="numeroJournee" placeholder="Numero de la journée...">
+		<input type="submit" id="searchsubmit" value="Éditer ou ajouter un pronostique" class="btn primary">
+	}
+@**    
+	@helper.form(action = routes.Pronos.nouveauOuEditer2()) {
+		<input type="text" id="searchbox" name="nomJoueur" placeholder="Nom du joueur...">
+		<input type="text" id="searchbox" name="numeroJournee" placeholder="Numero de la journée...">
+		<input type="submit" id="searchsubmit" value="Éditer ou ajouter un pronostique" class="btn primary">
+	}
+
+	@helper.form(action = routes.Pronos.nouveauDetail()) {
+		<input type="text" id="searchbox" name="joueur" placeholder="Nom du joueur...">
+		<input type="text" id="searchbox" name="journee" placeholder="Numero de la journée...">
+
+        <fieldset>
+            @select(
+                pronoForm("journee"), 
+                options(JourneeTop14.listeNumero), 
+                '_label -> "Journée",
+                '_showConstraints -> false
+            )
+            @select(
+                pronoForm("joueur"), 
+                options(Joueur.all().map( (x:Joueur) => x.nom):List[String]), 
+                '_label -> "Joueur", '_default -> "-- Choisissez un joueur --",
+                '_showConstraints -> false
+            )
+        </fieldset>
+ 
+        <div class="actions">
+            <input type="submit" value="Créer le prono' pour cette journée et ce joueur" class="btn primary"> or 
+            <a href="@routes.Application.pronos()" class="btn">Annuler</a> 
+        </div>
+    }
+**@
+}

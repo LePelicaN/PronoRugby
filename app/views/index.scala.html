@@ -1,0 +1,90 @@
+@(joueurs: List[Joueur], scoresOfficiel: List[Score], scoresVincent: List[Score], pronoJournees: List[PronoJournee], journees: List[JourneeTop14], journeeCourante: String)
+
+@import helper._
+
+
+
+@displayResumeScore(score: Score) = {
+	<li>
+	    @score.getJoueur().nom - @score.getPoints() 
+	</li>
+}
+
+@displayResumeScores(scoresOfficiel: List[Score]) = {
+	<h1>@joueurs.size() joueur(s)</h1>
+	<ul>
+	    @for(score <- scoresOfficiel) {
+	    	@displayResumeScore(score)
+	    }
+	</ul>
+}
+
+
+
+@displayResumeJournees(journees: List[JourneeTop14]) = {
+	<h1>@journees.size() journees(s)</h1>
+}
+
+
+
+@displayPronoMatch(pronoMatch: PronoMatch) = {
+		<tr>
+			<td class="@{ if (pronoMatch.victoireADomicile) "gagnant" else "perdant" }">@pronoMatch.matchPronostique.domicile</td>
+			<td class="@{ if (!pronoMatch.victoireADomicile) "gagnant" else "perdant" }">@pronoMatch.matchPronostique.exterieur</td>
+		</tr>
+}
+
+@displayPronoJournee(pronoJournee: PronoJournee) = {
+    <div class="pronoJournee">
+    	Prono de <b> @pronoJournee.joueur.nom </b> pour la journée <b> n°@pronoJournee.journee.numero </b>
+    	<table>
+		@for(pronoMatch <- pronoJournee.pronoMatchs) {
+			@displayPronoMatch(pronoMatch)
+		}
+		</table>
+    </div>
+}
+
+@displayPronosJournee(pronoJournees: List[PronoJournee]) = {
+    <ul>
+        @for(pronoJournee <- pronoJournees) {
+            <li>
+            	@displayPronoJournee(pronoJournee)
+            </li>
+        }
+    </ul>
+}
+
+@displayResumePronoJournees(pronoJournees: List[PronoJournee], journeeCourante: String) = {
+	@if(pronoJournees != null) {
+    	<h1>@pronoJournees.size() prono(s) pour la journée n°@journeeCourante</h1>
+	} else {
+    	<h1>Aucun prono pour la journée n°@journeeCourante</h1>
+	}
+
+	@helper.form(action = routes.Application.pronos()) {
+		<input type="text" id="searchbox" name="journeeCourante" placeholder="Numero de la journée courante...">
+		<input type="submit" id="searchsubmit" value="Mettre à jour la journée courante" class="btn primary">
+	}
+
+	@if(pronoJournees != null) {
+		@displayPronosJournee(pronoJournees)
+	}
+}
+
+
+@main("Prono rugby") {
+
+	@displayResumeScores(scoresOfficiel)
+	Score : pour chaque match, les points correspondent à la quote si et seulement si le gagnant pronostiqué gagne le match et à 0 sinon. 
+	@displayResumeScores(scoresVincent)
+	Score : pour chaque match, les points correspondent à la quote multipliée par le nombre de points remportés par l'équipe (victoire = 4, nul = 2, bonus = +1).
+	<br/>
+	<a class="btn success" id="add" href="@routes.Application.nouveauJoueur()">Ajouter un joueur</a>
+
+	@displayResumeJournees(journees)
+	<a class="btn success" id="add" href="@routes.Application.nouveauJournee()">Ajouter une journée</a>
+
+	@displayResumePronoJournees(pronoJournees, journeeCourante)
+	<a class="btn success" id="add" href="@routes.Application.nouveauProno()">Ajouter ou éditer un prono</a>
+}

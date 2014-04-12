@@ -1,0 +1,32 @@
+@(joueurs: List[Joueur])
+
+@displayJoueur( joueur : Joueur ) = {
+    <table class="joueur stypeXXX">
+        <tbody>
+		       <tr>
+		           <td>@joueur.nom</td>
+		       </tr>
+        </tbody>
+    </table>
+}
+
+@main("Joueurs") {
+
+    <h1>@joueurs.size() joueurs(s)</h1>
+
+    <table class="joueurs stypeXXX">
+        <thead>
+            <tr>
+                <td>Nom</td>
+            </tr>
+        </thead>
+	    <tbody>
+			<tr>
+			    @for(joueur <- joueurs) {
+			    	@displayJoueur(joueur)
+			    }
+			</tr>
+	    </tbody>
+    </table>
+    
+}

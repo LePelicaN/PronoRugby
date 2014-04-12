@@ -1,0 +1,24 @@
+@(joueurForm: Form[Joueur])
+
+@import helper._
+
+@main("Nouveau joueur") {
+    
+    <h1>Nouveau joueur</h1>
+    
+    @form(routes.Application.sauvegardeJoueur()) {
+        
+        <fieldset>
+        
+            @inputText(joueurForm("nom"), '_label -> "Nom du joueur")       
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Créer ce joueur" class="btn primary"> or 
+            <a href="@routes.Application.pronos()" class="btn">Annuler</a> 
+        </div>
+        
+    }
+    
+}

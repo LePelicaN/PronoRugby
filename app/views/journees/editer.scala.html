@@ -1,0 +1,96 @@
+@(id: Long, formJourneeTop14: Form[JourneeTop14])
+
+@import helper._
+
+@displayMatchs(fieldMatch: Field) = {
+}
+
+@matchGroup(matchField: Field, className: String = "match") = {
+	<tr>
+		<td>
+			@inputText(matchField("coteDomicile"), '_label -> "")
+		</td>
+		<td>
+		     @select(
+		         matchField("domicile"),
+		         options(Equipe.listeEquipe),
+		         '_label -> "",
+		         '_showConstraints -> false
+		     )
+		</td>
+		<td>
+		     @select(
+		         matchField("bonusDomicile"),
+		         options(MatchC.listeBonus),
+		         '_label -> "",
+		         '_showConstraints -> false
+		     )
+		</td>
+		<td>
+		     @select(
+		         matchField("resultat"),
+		         options(MatchC.listeResultat),
+		         '_label -> "",
+		         '_showConstraints -> false
+		     )
+		</td>
+		<td>
+		     @select(
+		         matchField("bonusExterieur"),
+		         options(MatchC.listeBonus),
+		         '_label -> "",
+		         '_showConstraints -> false
+		     )
+		</td>
+		<td>
+		     @select(
+		         matchField("exterieur"),
+		         options(Equipe.listeEquipe),
+		         '_label -> "",
+		         '_showConstraints -> false
+		     )
+		</td>
+		<td>
+			@inputText(matchField("coteExterieur"), '_label -> "")
+		</td>
+    </tr>
+}
+
+@main("Édition d'une journée du top 14") {
+    
+    <h1>Édition d'une journéee du top 14</h1>
+    
+    @form(routes.Journees.mettreAJour(id)) {
+        
+        <fieldset>
+        
+            @select(
+                formJourneeTop14("numero"),
+                options(JourneeTop14.listeNumero),
+                '_label -> "Journée",
+                '_showConstraints -> false
+            )
+
+            <legend>Matchs</legend>
+            <div id="matchs">
+	            <table>
+	            	@repeat(formJourneeTop14("matchs"), min = 7) { match_ =>
+	                	@matchGroup(match_)
+	               	}
+	            </table>
+            </div>
+        
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Sauvegarder la journée" class="btn primary"> or 
+            <a href="@routes.Journees.blank()" class="btn">Annuler</a> 
+        </div>
+        
+    }
+    
+    @form(routes.Journees.supprimer(id), 'class -> "topRight") {
+        <input type="submit" value="Supprimer cette journée" class="btn danger">
+    }
+
+}

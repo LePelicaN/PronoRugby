@@ -1,0 +1,91 @@
+@(journeeForm: Form[JourneeTop14])
+
+@import helper._
+
+
+@**
+@informationGroup(field: Field, className: String = "match") = {
+    <div class="twipsies well @className">
+	     @select(
+	         matchForm("domicile"),
+	         options(Equipe.listeEquipe),
+	         '_label -> "Équipe domicile", '_default -> "-- Choisissez une journée --",
+	         '_showConstraints -> false
+	     )
+
+	     @select(
+	         matchForm("exterieur"),
+	         options(Equipe.listeEquipe),
+	         '_label -> "Équipe exterieur", '_default -> "-- Choisissez une journée --",
+	         '_showConstraints -> false
+	     )
+    </div>
+}
+**@
+
+
+@matchGroup(matchField: Field, className: String = "match") = {
+	<ul>
+		<li>
+		     @select(
+		         matchField("domicile"),
+		         options(Equipe.listeEquipe),
+		         '_label -> "",
+				 '_default -> "-- Choisissez une équipe --",
+		         '_showConstraints -> false
+		     )
+		</li>
+		<li>
+		     @select(
+		         matchField("exterieur"),
+		         options(Equipe.listeEquipe),
+		         '_label -> "",
+		         '_default -> "-- Choisissez une équipe --",
+		         '_showConstraints -> false
+		     )
+		</li>
+    </ul>
+}
+
+@main("Nouvelle journ�e") {
+
+    <h1>Nouvelle journée</h1>
+
+    @form(routes.Application.sauvegardeJournee()) {
+
+        <fieldset>
+            @select(
+                journeeForm("numero"),
+                options(JourneeTop14.listeNumero),
+                '_label -> "Journée", '_default -> "-- Choisissez une journée --",
+                '_showConstraints -> false
+            )
+        </fieldset>
+
+        <fieldset>
+            <legend>Matchs</legend>
+            <div id="matchs">
+                @repeat(journeeForm("matchs"), min=7) { matchField =>
+                
+                    @matchGroup(matchField)
+                
+                }
+                @*@repeat(journeeForm("matchs")) { matchField =>
+                    @informationMatch(matchField)
+                }
+
+                @informationMatch(
+                    journeeForm("matchs[x]"),
+                    className = "profile_template"
+                )*@
+            </div>
+        </fieldset>
+
+        <div class="actions">
+            <input type="submit" value="Créer cette journée'" class="btn primary"> or 
+            <a href="@routes.Application.pronos()" class="btn">Annuler</a>
+        </div>
+
+    }
+
+}

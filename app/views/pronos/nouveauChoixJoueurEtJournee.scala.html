@@ -1,0 +1,48 @@
+@(pronoForm: Form[PronoJournee])
+
+@import helper._
+
+
+@pronoGroup(field: Field, className: String = "Boolean") = {
+    <div class="prono">
+		@checkbox(
+        	field, 
+            '_label -> None,
+			'_text -> "Victoire à domicile",
+            '_showConstraints -> false
+         )
+    </div>
+}
+
+@main("Nouveau prono") {
+    
+    <h1>Nouveau prono</h1>
+    
+    @form(routes.Application.sauvegardeProno()) {
+        
+        <fieldset>
+            @select(
+                pronoForm("journee"), 
+                options(JourneeTop14.listeNumero), 
+                '_label -> "Journée",
+                '_showConstraints -> false
+            )
+            @select(
+                pronoForm("joueur"), 
+                options(Joueur.all().map( (x:Joueur) => x.nom):List[String]), 
+                '_label -> "Joueur", '_default -> "-- Choisissez un joueur --",
+                '_showConstraints -> false
+            )
+			@repeat(pronoForm("victoiresADomicile"), min=7) { pronoField =>
+				@pronoGroup(pronoField)
+			}
+<!--             @inputText(pronoForm("joueur"), '_label -> "Nom du joueur") -->         
+
+        </fieldset>
+        
+        <div class="actions">
+            <input type="submit" value="Créer ce prono'" class="btn primary"> or 
+            <a href="@routes.Application.pronos()" class="btn">Annuler</a> 
+        </div>
+    }
+}

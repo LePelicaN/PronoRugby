@@ -1,0 +1,135 @@
+@(pronoJournee:PronoJournee, pronoForm: Form[PronoJournee], nouveau:Boolean)
+
+@import helper._
+
+
+@pronoGroup(matchField: Field, className: String = "Boolean") = {
+
+	<div class="pronostique_match">
+	<tr>
+	<td>
+    ( @matchField.apply("matchPronostique")("coteDomicile").value )
+    @matchField.apply("matchPronostique")("domicile").value 
+    VS 
+    @matchField.apply("matchPronostique")("exterieur").value
+    ( @matchField.apply("matchPronostique")("coteExterieur").value )
+    </td>
+
+	<td>
+    @defining( matchField.apply("matchPronostique")("domicile").value.get + " gagne" ) { textAff =>
+    	@checkbox(field = matchField("victoireADomicile"), '_label -> textAff )
+    }
+    </td>
+	</tr>
+    
+	
+            @inputText(matchField("matchPronostiqueId"), 'style -> "display: none", '_label -> None)  
+
+
+	@** <input name="matchPronostiqueId" value='@matchField.apply("matchPronostique")("id").value' > **@
+			@** @matchField("matchPronostiqueId") = @matchField.apply("matchPronostique")("id").value
+            @inputText(matchField("matchPronostiqueId"),
+                       '_label -> None) **@    
+            @** <input type="hidden" name="matchPronostiqueId" value='@matchField.apply("matchPronostique")("id").value' > **@
+	</div>
+               
+
+@**
+	@defining( matchField("matchPronostique").value:Option[String] ) { myOption =>
+		@myOption
+		@defining ( myOption match {
+	  		case Some(matchC) => {
+	  			matchC
+	  		}
+	  		case None => {
+	  			null
+	  		}
+	  	}
+	  	     ) matchCour =>
+	  	{
+			@matchCour.domicile VS @matchCour.exterrieur
+		}
+	}
+**@
+	@** val matchCour = @matchField("matchPronostique").value match {
+	  case Some(matchC) => { matchC }
+	  case None => { null }
+	} **@
+	@** @matchCour.domicile VS @matchCour.exterrieur **@
+
+	@** @matchField("matchPronostique").value.domicile VS @matchField("exterrieur").value **@
+    @** <div class="prono">
+		@checkbox(
+        	field, 
+            '_label -> None,
+			'_text -> "Victoire à domicile",
+            '_showConstraints -> false
+         )
+    </div> **@
+}
+
+@main("Nouveau prono") {
+
+	<h1>
+	@{ if (nouveau) "Nouveau "
+	   else "Mise à jour du " }
+	prono de @pronoJournee.joueur.nom pour la journée n°@pronoJournee.journee.numero</h1>
+    
+    @form(routes.Pronos.mettreAJour(pronoJournee.id)) {
+        
+            @inputText(pronoForm("idJourneeManual"), 'style -> "display: none", '_label -> None)  
+            @inputText(pronoForm("idJoueurManual"), 'style -> "display: none", '_label -> None)  
+
+    @**<table class="journeees stypeXXX">
+        <thead>
+            <tr>
+                <td>Equipe domicile</td>
+                <td>Victoire à domicile</td>
+                <td>Equipe exterieur</td>
+            </tr>
+        </thead>**@
+
+<table>
+			@repeat(pronoForm("pronoMatchs"), min=7) { pronoMatchField =>
+				@pronoGroup(pronoMatchField)
+			}     
+</table>
+@**
+	    </tbody>
+    </table> **@
+
+	@defining( nouveau:scala.Boolean ) { estNouveau =>
+	@estNouveau match {
+		case true => {        
+	        <div class="actions">
+	            <input type="submit" value="Créer ce prono'" class="btn primary"> or 
+	            <a href="@routes.Application.pronos()" class="btn">Annuler</a> 
+	        </div>
+	      }
+	    case false => {   
+	        <div class="actions">
+	            <input type="submit" value="Mettre à jour ce prono'" class="btn primary"> or 
+	            <a href="@routes.Application.pronos()" class="btn">Annuler</a> 
+	        </div>
+	    }
+	   }
+    }
+    }
+
+
+
+	@defining( nouveau:scala.Boolean ) { estNouveau =>
+		@estNouveau match {
+			case true => {        
+
+		      }
+		    case false => {   
+    @form(routes.Pronos.supprimer(pronoJournee.id), 'class -> "topRight") {
+        <input type="submit" value="Supprimer ce prono'" class="btn danger">
+    }
+		    }
+	    }
+    }
+
+    
+}

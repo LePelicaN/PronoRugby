@@ -1,0 +1,40 @@
+@(journees: List[JourneeTop14])
+
+@displayJourneeTop14( journeeTop14 : JourneeTop14 ) = {
+			@journeeTop14.matchs.zipWithIndex.map { case (match_, matchId_) =>
+			<tr>
+			           <td>@if(matchId_ == 0){ @journeeTop14.numero.toString() }else{  }</td>
+			           <td>@match_.domicile</td>
+			           <td>@match_.exterieur</td>
+			</tr>
+			   }
+}
+
+@main("Journées du top 14") {
+
+	<table class="journeees edition">
+		@for(journee <- journees) {
+		    <tr>
+		        <td><a href="@routes.Journees.editer(journee.id)">Editer journée n°@journee.numero</a></td>
+		    <tr>
+	    }
+	</table>
+
+    <h1>@journees.size() journée(s)</h1>
+
+    <table class="journeees stypeXXX">
+        <thead>
+            <tr>
+                <td>N° de la journée</td>
+                <td>Domicile</td>
+                <td>Exterieur</td>
+            </tr>
+        </thead>
+	    <tbody>
+			    @for(journee <- journees) {
+			    	@displayJourneeTop14(journee)
+			    }
+	    </tbody>
+    </table>
+    
+}

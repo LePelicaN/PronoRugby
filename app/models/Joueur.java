@@ -19,7 +19,7 @@ public class Joueur extends Model {
 
     @Constraints.Required
     public String nom;
-    public String nom2345;
+    public String nfqsdsf;
 
 	public static Finder<Long,Joueur> find = new Finder(
 			Long.class, Joueur.class

@@ -1,4 +1,4 @@
-@(joueurs: List[Joueur], scoresOfficiel: List[Score], scoresVincent: List[Score], pronoJournees: List[PronoJournee], journees: List[JourneeTop14], journeeCourante: String)
+@(joueurs: List[Joueur], scoresOfficiel: List[Score], scoresVincent: List[Score], pronoJournees: List[PronoJournee], precedenteJournee: JourneeTop14, prochaineJournee: JourneeTop14, journeeCourante: String)
 
 @import helper._
 
@@ -11,7 +11,7 @@
 }
 
 @displayResumeScores(scoresOfficiel: List[Score]) = {
-	<h1>@joueurs.size() joueur(s)</h1>
+	<!--<h1>@joueurs.size() joueur(s)</h1>-->
 	<ul>
 	    @for(score <- scoresOfficiel) {
 	    	@displayResumeScore(score)
@@ -19,13 +19,48 @@
 	</ul>
 }
 
-
-
-@displayResumeJournees(journees: List[JourneeTop14]) = {
-	<h1>@journees.size() journees(s)</h1>
+@displayScores(scoresOfficiel: List[Score], scoresVincent: List[Score]) = {
+	<table border="1">
+		<tr>
+			<td>
+				@displayResumeScores(scoresOfficiel)
+				Score : pour chaque match, les points correspondent à la quote si et seulement si le gagnant pronostiqué gagne le match et à 0 sinon.
+			</td>
+			<td>
+				@displayResumeScores(scoresVincent)
+				Score : pour chaque match, les points correspondent à la quote multipliée par le nombre de points remportés par l'équipe (victoire = 4, nul = 2, bonus = +1).
+			</td>
+		</tr>
+	</table>
 }
 
+@displayJournee(journee: JourneeTop14, dejaJoue: Boolean) = {
+	<br/>
+	<table>
+		@journee.matchs.zipWithIndex.map { case (match_, matchId_) =>
+			<tr>
+				<td class="@{ if (match_.resultat == "matchNull") "nul" else  if (match_.resultat == "victoireDomicile") "gagnant" else if (match_.resultat == "victoireExterrieur") "perdant" }" align="right"> ( @match_.coteDomicile ) @match_.domicile </td>
+				<td> VS </td>
+				<td class="@{ if (match_.resultat == "matchNull") "nul" else  if (match_.resultat == "victoireExterrieur") "gagnant" else if (match_.resultat == "victoireDomicile") "perdant" }"> @match_.exterieur ( @match_.coteExterieur ) </td> 
+			</tr>
+		}
+	</table>
+}
 
+@displayJournees(precedenteJournee: JourneeTop14, prochaineJournee: JourneeTop14) = {
+	<table border="1">
+		<tr>
+			<td>
+				Dernière journée (n°@precedenteJournee.numero.toString()):
+				@displayJournee(precedenteJournee, true)
+			</td>
+			<td>
+				Prochaine journée (n°@prochaineJournee.numero.toString()):
+				@displayJournee(prochaineJournee, false)
+			</td>
+		</tr>
+	</table>
+}
 
 @displayPronoMatch(pronoMatch: PronoMatch) = {
 		<tr>
@@ -67,6 +102,8 @@
 		<input type="submit" id="searchsubmit" value="Mettre à jour la journée courante" class="btn primary">
 	}
 
+	<a class="btn success" id="add" href="@routes.Application.nouveauProno()">Ajouter ou éditer un prono</a>
+
 	@if(pronoJournees != null) {
 		@displayPronosJournee(pronoJournees)
 	}
@@ -75,16 +112,13 @@
 
 @main("Prono rugby") {
 
-	@displayResumeScores(scoresOfficiel)
-	Score : pour chaque match, les points correspondent à la quote si et seulement si le gagnant pronostiqué gagne le match et à 0 sinon. 
-	@displayResumeScores(scoresVincent)
-	Score : pour chaque match, les points correspondent à la quote multipliée par le nombre de points remportés par l'équipe (victoire = 4, nul = 2, bonus = +1).
+	@displayScores(scoresOfficiel, scoresVincent)
 	<br/>
-	<a class="btn success" id="add" href="@routes.Application.nouveauJoueur()">Ajouter un joueur</a>
-
-	@displayResumeJournees(journees)
-	<a class="btn success" id="add" href="@routes.Application.nouveauJournee()">Ajouter une journée</a>
-
+	@displayJournees(precedenteJournee, prochaineJournee)
+	<br/>
 	@displayResumePronoJournees(pronoJournees, journeeCourante)
 	<a class="btn success" id="add" href="@routes.Application.nouveauProno()">Ajouter ou éditer un prono</a>
+	<br/>
+	<a class="btn success" id="add" href="@routes.Application.nouveauJoueur()">Ajouter un joueur</a>
+	<a class="btn success" id="add" href="@routes.Application.nouveauJournee()">Ajouter une journée</a>
 }

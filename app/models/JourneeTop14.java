@@ -39,12 +39,46 @@ public class JourneeTop14 extends Model {
 		return find.all();
 	}
 
+	public static JourneeTop14 derniereJouee() {
+		List<JourneeTop14> allJournees = all();
+		int i = 0;
+		while ( i < allJournees.size() && allJournees.get(i).estJoue() )
+		{
+			++i;
+		}
+		if (i != 0 && i < allJournees.size()) {
+			return allJournees.get( i - 1 );
+		}
+		return null;
+	}
+
+	public static JourneeTop14 prochaineJouee() {
+		List<JourneeTop14> allJournees = all();
+		int i = 0;
+		while ( i < allJournees.size() && allJournees.get(i).estJoue() )
+		{
+			++i;
+		}
+		if (i < allJournees.size()) {
+			return allJournees.get( i );
+		}
+		return null;
+	}
+
+    private boolean estJoue() {
+		boolean estJoue = true;
+		for (MatchC match : this.matchs) {
+			 estJoue = estJoue && match.estJoue();
+		}
+		return estJoue;
+	}
+
 /*
 	public static Finder<Long,JourneeTop14> find = new Finder(
 			Long.class, JourneeTop14.class
 			);*/
 
-    public static Map<String,String> listeNumero() {
+	public static Map<String,String> listeNumero() {
         LinkedHashMap<String,String> listeNumero = new LinkedHashMap<String,String>();
     	for ( Integer i = 1; i <= 26; ++i ){
     		listeNumero.put(i.toString(), i.toString());

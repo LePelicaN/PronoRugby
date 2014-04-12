@@ -94,4 +94,9 @@ public class MatchC extends Model {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public boolean estJoue() {
+		Resultat resultat = Resultat.valueOf(this.resultat);
+		return resultat != Resultat.pasEncoreJoue;
+	}
 }

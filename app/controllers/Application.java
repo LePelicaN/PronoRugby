@@ -23,9 +23,9 @@ public class Application extends Controller {
         DynamicForm requestData = form().bindFromRequest();
         String journeeCourante = requestData.get("journeeCourante");
         if (journeeCourante == null) {
-        	journeeCourante = "10";
+        	journeeCourante = "1";
         }
-		return ok( views.html.index.render( Joueur.all(), ScoreOfficiel.getAll(), ScoreVincent.getAll(), PronoJournee.journeeNumero(journeeCourante), JourneeTop14.all(), journeeCourante ) );
+		return ok( views.html.index.render( Joueur.all(), ScoreOfficiel.getAll(), ScoreVincent.getAll(), PronoJournee.journeeNumero(journeeCourante), JourneeTop14.derniereJouee(), JourneeTop14.prochaineJouee(), journeeCourante ) );
 	}
 
 

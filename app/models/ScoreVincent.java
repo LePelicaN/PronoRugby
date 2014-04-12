@@ -30,7 +30,7 @@ public class ScoreVincent implements Score {
 		if (pronoMatch.gagnant.equals(match.domicile)) {
 			return match.coteDomicile;
 		} else {
-			return match.coteDomicile;
+			return match.coteExterieur;
 		}
 	}
 	
